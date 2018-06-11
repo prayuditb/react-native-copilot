@@ -40,6 +40,16 @@ const copilot = ({
         visible: false,
       };
 
+      mounted = false;
+
+      componentDidMount() {
+        this.mounted = true;
+      }
+
+      componentWillUnmount() {
+        this.mounted = false;    
+      }
+
       getChildContext(): { _copilot: CopilotContext } {
         return {
           _copilot: {
@@ -78,8 +88,6 @@ const copilot = ({
 
       startTries = 0;
 
-      mounted = false;
-
       eventEmitter = mitt();
 
       isFirstStep = (): boolean => this.state.currentStep === this.getFirstStep();
@@ -96,9 +104,8 @@ const copilot = ({
       }
 
       unregisterStep = (stepName: string): void => {
-        if (!this.mounted) {
-          return;
-        }
+        if (!this.mounted) return;
+
         this.setState(({ steps }) => ({
           steps: Object.entries(steps)
             .filter(([key]) => key !== stepName)
@@ -153,14 +160,6 @@ const copilot = ({
           top: size.y - (OFFSET_WIDTH / 2),
         });
       }
-
-      componentDidMount() {
-        this.mounted = true;
-      }
-
-      componentWillUnmount() {
-        this.mounted = false;
-      };
 
       render() {
         return (
